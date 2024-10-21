@@ -1,7 +1,7 @@
 # 🚀Zero Downtime Deployment: Blue-Green Deployment Strategy for Java MySQL Application on EKS🚀
 
+![Workflow-DIagram](https://github.com/user-attachments/assets/e5569c23-755a-4c7e-a9bf-dedd1eb2dd10)
 
-![download](https://github.com/user-attachments/assets/3ae411a0-da1a-4b8a-b8a3-9612d43d3a5f)
 
 # Complete END to END Workflow Diagram:
 
