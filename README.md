@@ -36,8 +36,8 @@ We'll leverage a **CI/CD** pipeline integrated with IAC as **Terraform** for pro
  sudo apt update
 
 ✅ Install AWS CLI::
-  curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-  unzip awscliv2.zip
+  curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
+  unzip awscliv2.zip \
   sudo ./aws/install
 
 ✅ Install terraform:
@@ -64,76 +64,74 @@ We'll leverage a **CI/CD** pipeline integrated with IAC as **Terraform** for pro
       kubectl create ns webapps
 
 ✅ Creating service account first create service_acc.yml with content as:  
-    apiVersion: v1
-    kind: ServiceAccount
-    metadata:
-      name: jenkins
+    apiVersion: v1 \
+    kind: ServiceAccount \
+    metadata: \
+      name: jenkins \
       namespace: webapps
 
 ✅ Now we will be creating role to attach with the service account we will create a file role.yml with content:  
-    apiVersion: rbac.authorization.k8s.io/v1
-    kind: Role
-    metadata:
-      name: app-role
-      namespace: webapps
-    rules:
-      - apiGroups:
-            - ""
-            - apps
-            - autoscaling
-            - batch
-            - extensions
-            - policy
-            - rbac.authorization.k8s.io
-        resources:
-          - pods
-          - secrets
-          - componentstatuses
-          - configmaps
-          - daemonsets
-          - deployments
-          - events
-          - endpoints
-          - horizontalpodautoscalers
-          - ingress
-          - jobs
-          - limitranges
-          - namespaces
-          - nodes
-          - pods
-          - persistentvolumes
-          - persistentvolumeclaims
-          - resourcequotas
-          - replicasets
-          - replicationcontrollers
-          - serviceaccounts
-          - services
-        verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
-
+    apiVersion: rbac.authorization.k8s.io/v1 \
+kind: Role \
+metadata: \
+  name: app-role \
+  namespace: webapps \
+rules: \
+  - apiGroups: \
+        - "" \
+        - apps \
+        - autoscaling \
+        - batch \
+        - extensions \
+        - policy \
+        - rbac.authorization.k8s.io \
+    resources: \
+      - pods \
+      - secrets \
+      - componentstatuses \
+      - configmaps \
+      - daemonsets \
+      - deployments \
+      - events \
+      - endpoints \
+      - horizontalpodautoscalers \
+      - ingress \
+      - jobs \
+      - limitranges \
+      - namespaces \
+      - nodes \
+      - persistentvolumes \
+      - persistentvolumeclaims \
+      - resourcequotas \
+      - replicasets \
+      - replicationcontrollers \
+      - serviceaccounts \
+      - services \
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
 
 ✅ Next step is to assign the created role to the service account i.e. binding the role to service account for that create file bind_role.yml with content:
-    apiVersion: rbac.authorization.k8s.io/v1
-    kind: RoleBinding
-    metadata:
-      name: app-rolebinding
-      namespace: webapps 
-    roleRef:
-      apiGroup: rbac.authorization.k8s.io
-      kind: Role
-      name: app-role 
-    subjects:
-    - namespace: webapps 
-      kind: ServiceAccount
-      name: jenkins
+    apiVersion: rbac.authorization.k8s.io/v1 \
+    kind: RoleBinding \
+    metadata: \
+      name: app-rolebinding \
+      namespace: webapps \
+    roleRef: \
+      apiGroup: rbac.authorization.k8s.io \
+      kind: Role \
+      name: app-role \
+    subjects: \
+    - namespace: webapps \
+      kind: ServiceAccount \
+      name: jenkins 
       
-  ✅ Next create secret token for the jenkins service account, will create file jenkins_token.yml with content:
-    apiVersion: v1
-    kind: Secret
-    type: kubernetes.io/service-account-token
-    metadata:
-      name: mysecretname
-      annotations:
-        kubernetes.io/service-account.name: jenkins
+  ✅ Next create secret token for the jenkins service account, will create file jenkins_token.yml with content: \
+    apiVersion: v1 \
+    kind: Secret \
+    type: kubernetes.io/service-account-token \
+    metadata: \
+      name: mysecretname \
+      annotations: \
+        kubernetes.io/service-account.name: jenkins \
 
 ✅  We will be using this secret for jenkins to EKS communication, to get the token run command:
       kubectl describe secret mysecretname -n webapps
@@ -203,29 +201,29 @@ Maven: name= maven3; Install from apache;
 
 SonarQube Scanner: name=sonar-scanner; Install from maven central;
 
-✅ Install docker on Jenkins server using:
- sudo apt-get update
- sudo apt-get install ca-certificates curl
- sudo install -m 0755 -d /etc/apt/keyrings
- sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
- sudo chmod a+r /etc/apt/keyrings/docker.asc
+✅ Install docker on Jenkins server using: \
+ sudo apt-get update \
+ sudo apt-get install ca-certificates curl \
+ sudo install -m 0755 -d /etc/apt/keyrings \
+ sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc \
+ sudo chmod a+r /etc/apt/keyrings/docker.asc \
 
  # Add the repository to Apt sources:
  echo \
    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
- sudo apt-get update
+   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null \
+ sudo apt-get update \
 
- sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin \
 
  sudo chmod 666 /var/run/docker.sock
 
-✅Install Trivy:
- sudo apt-get install wget apt-transport-https gnupg lsb-release
- wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
- echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
- sudo apt-get update
+✅Install Trivy: \
+ sudo apt-get install wget apt-transport-https gnupg lsb-release \
+ wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add - \
+ echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list \
+ sudo apt-get update \
  sudo apt-get install trivy
 
 ✅Install kubectl on Jenkins instance:
@@ -301,17 +299,6 @@ SonarQube Scanner: name=sonar-scanner; Install from maven central;
 
 -For maven-snapshot copy the url from nexus > browse > copy maven-snapshot url and paste in the <maven-snapshots> url section inside pom.xml of source code.
 
-  <distributionManagement>
-          <repository>
-              <id>maven-releases</id>
-              <url>http://3.110.172.144:8081/repository/maven-releases/</url>
-          </repository>
-          <snapshotRepository>
-              <id>maven-snapshots</id>
-              <url>http://3.110.172.144:8081/repository/maven-snapshots/</url>
-          </snapshotRepository>
-  </distributionManagement>
-
 
  ✅ Nexus Credentials:
 
@@ -319,17 +306,7 @@ Go to Jenkins > Dashboard > Manage Jenkins > Managed Files > Click Add new confi
 
 You will get the maven settings file, inside file find the <server> </server> section and uncomment it. And make 2 copies of it.
 
-  <server>
-      <id>maven-releases</id>
-      <username>nexus_username</username>
-      <password>nexus_password</password>
-  </server>
-  <server>
-      <id>maven-snapshots</id>
-      <username>nexus_username</username>
-      <password>nexus_password</password>
-  </server>
-
+  
 
 ####################################################################################################################################
 
