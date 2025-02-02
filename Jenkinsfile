@@ -22,7 +22,7 @@
       stages {
           stage('Git Checkout') {
               steps {
-                  git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/RajPractiseRepo/Blue-Green-Deployment-CICD.git'
+                  git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/rajeshgaddagunta15/Blue-Green-Deployment-CICD.git'
               }
           }
 
