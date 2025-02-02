@@ -71,7 +71,7 @@
                   sh "trivy fs --format table -o fs.html ."
               }
           }
-
+          /*
           stage("Pulish to Nexus"){
               steps{
                   withMaven(globalMavenSettingsConfig: 'maven-settings', jdk: '', maven: 'maven3', mavenSettingsConfig: '', traceability: true) {
@@ -79,7 +79,7 @@
                   }
               }
           }
-
+          */
           stage('Docker build') {
               steps {
                   script {
